@@ -57,12 +57,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Sets elevation
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.setElevation(50);
-            System.out.println("Set elevation of popup");
-            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-        }
     }
 
     //Is called when create activty button is pressed
