@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     View popView;
 
     ArrayList<Plan> activities;
+    ActivitiesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rvActivities = (RecyclerView) findViewById(R.id.rvActivities);
 
         //Initialize activities
-        activities = Plan.createPlanList(20);
+        activities = Plan.createPlanList(5);
         //Create adapter passing in the sample user data
-        ActivitiesAdapter adapter = new ActivitiesAdapter(activities);
+        adapter = new ActivitiesAdapter(activities);
         //Attach the adapter to the recyclerview to populate items
         rvActivities.setAdapter(adapter);
         //Set layout manager to position the items
@@ -91,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         Plan plan = new Plan(activity_name);
         //Add activity to adapterlist
         activities.add(plan);
-
+        //Notify the adapter that Dataset/Array has changed
+        adapter.notifyDataSetChanged();
 
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), "Created activity", Snackbar.LENGTH_SHORT);

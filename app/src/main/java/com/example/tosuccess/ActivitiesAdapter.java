@@ -29,7 +29,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         }
     }
 
-    private List<Plan> mActivities;
+    public List<Plan> mActivities;
 
     public ActivitiesAdapter(List<Plan> activities){
         mActivities = activities;
