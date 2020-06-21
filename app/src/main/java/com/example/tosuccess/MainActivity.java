@@ -1,7 +1,10 @@
 package com.example.tosuccess;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,31 +12,42 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     Context context;
-    ConstraintLayout pageLayout;
+    ListView listView;
+    CardView[] activityViewArr;
+    String[] stringArr = {"tiss", "haha", "sofunny", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"};
     View popView;
+
+    ArrayList<Plan> activities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        context = getBaseContext();
+        //Lookup the recyclerview in activity layout
+        RecyclerView rvActivities = (RecyclerView) findViewById(R.id.rvActivities);
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        pageLayout = (ConstraintLayout) inflater.inflate(R.layout.activity_main, null);
-        LinearLayout activityLayout = (LinearLayout) inflater.inflate(R.layout.activity, null);
-
-        setContentView(pageLayout);
-
-        //pageLayout.addView(activityLayout);
+        //Initialize activities
+        activities = Plan.createPlanList(20);
+        //Create adapter passing in the sample user data
+        ActivitiesAdapter adapter = new ActivitiesAdapter(activities);
+        //Attach the adapter to the recyclerview to populate items
+        rvActivities.setAdapter(adapter);
+        //Set layout manager to position the items
+        rvActivities.setLayoutManager(new LinearLayoutManager(this));
 
 
     }
@@ -78,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void createActivity(String activity_name){
         //Create activity
-        Plan plan = new Plan(activity_name, context);
+        Plan plan = new Plan(activity_name);
         //Display acitivty
         System.out.println("Tried to create a viewGroup");
-        pageLayout.addView(plan.viewGroup());
+        //listView.addView(plan.viewGroup());
 
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), "Created activity", Snackbar.LENGTH_SHORT);

@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity"
-    android:layout_width="350dp"
+<androidx.cardview.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#1E2222">
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="5dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardBackgroundColor="#1E2222">
 
-    <TextView
-        android:id="@+id/activity_name"
+    <LinearLayout
+        android:id="@+id/activity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_margin="15dp"
-        android:textSize="15dp"
-        android:text="Activity X"
-        android:textColor="#FFFFFF"/>
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:background="@drawable/btn_toggle"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:textOff="Not done"
+            android:textOn="Done!" />
+
+        <TextView
+            android:id="@+id/activity_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#FFFFFF"
+            android:hint="Enter activity name here...."
+            android:textSize="15dp" />
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
