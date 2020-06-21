@@ -8,7 +8,7 @@
     android:layout_marginHorizontal="10dp"
     android:layout_marginTop="5dp"
     card_view:cardCornerRadius="5dp"
-    card_view:cardBackgroundColor="#1E2222">
+    card_view:cardBackgroundColor="@color/card_background">
 
     <LinearLayout
         android:id="@+id/activity"
@@ -28,8 +28,7 @@
             android:id="@+id/activity_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="#FFFFFF"
-            android:hint="Enter activity name here...."
+            android:textColor="@color/TextCardColor"
             android:textSize="15dp" />
 
 

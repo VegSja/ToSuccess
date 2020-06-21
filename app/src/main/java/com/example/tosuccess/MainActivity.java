@@ -24,10 +24,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Context context;
-    ListView listView;
-    CardView[] activityViewArr;
-    String[] stringArr = {"tiss", "haha", "sofunny", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"};
     View popView;
 
     ArrayList<Plan> activities;

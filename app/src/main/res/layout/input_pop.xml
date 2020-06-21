@@ -5,7 +5,7 @@
     android:id="@+id/input_pop"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:background="#1E2222">
+    android:background="@color/popUpBackground">
 
     <EditText
         android:id="@+id/textInput"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/new_activity"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/TextCardColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
@@ -25,12 +25,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="#DE350B"
+        android:background="@color/buttonBackground"
         android:onClick="createActivityButton"
         android:text="Submit activity"
-        android:textColor="#1E2222"
+        android:textColor="@color/textButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/textInput"
         app:layout_constraintVertical_bias="1.0"
         tools:layout_editor_absoluteX="235dp" />
 
