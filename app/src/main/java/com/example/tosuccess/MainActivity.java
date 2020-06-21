@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     View popView;
 
     ArrayList<Plan> activities;
+
     ActivitiesAdapter adapter;
 
     @Override
@@ -95,8 +96,11 @@ public class MainActivity extends AppCompatActivity {
         //Notify the adapter that Dataset/Array has changed
         adapter.notifyDataSetChanged();
 
+    }
+
+    public void createPopUpMessage(String message){
         //Display pop-up message
-        Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), "Created activity", Snackbar.LENGTH_SHORT);
+        Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), message, Snackbar.LENGTH_SHORT);
         popUpMessage.show();
     }
 }
