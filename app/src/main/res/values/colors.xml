@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#1E2222</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#DE350B</color>
 
     <color name="MainBackground">#000000</color>
 
-    <color name="TextCardColor">#FFFFFF</color>
+    <color name="PrimaryTextColor">#FFFFFF</color>
+    <color name="SecondaryTextColor">#546C6C</color>
 
     <color name="card_background">#1E2222</color>
     <color name="popUpBackground">#1E2222</color>
 
-    <color name="greenGood">#42f545</color>
+    <color name="greenGood">#519872</color>
     <color name="redBad">#f54242</color>
 
     <color name="textButton">#1E2222</color>

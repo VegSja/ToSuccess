@@ -5,15 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
-    android:layout_marginTop="10dp"
-    card_view:cardCornerRadius="5dp"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp"
+    card_view:cardCornerRadius="10dp"
     card_view:cardBackgroundColor="@color/card_background">
 
     <RelativeLayout
         android:id="@+id/activity"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="160dp">
 
         <ToggleButton
             android:id="@+id/toggleButton"
@@ -38,9 +38,10 @@
             android:layout_marginLeft="60dp"
             android:layout_marginTop="21dp"
             android:layout_marginBottom="16dp"
-            android:textColor="@color/TextCardColor"
+            android:textColor="@color/PrimaryTextColor"
             android:gravity="center_vertical"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:typeface="monospace"/>
 
 
     </RelativeLayout>
