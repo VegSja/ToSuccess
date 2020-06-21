@@ -89,9 +89,9 @@ public class MainActivity extends AppCompatActivity {
     public void createActivity(String activity_name){
         //Create activity
         Plan plan = new Plan(activity_name);
-        //Display acitivty
-        System.out.println("Tried to create a viewGroup");
-        //listView.addView(plan.viewGroup());
+        //Add activity to adapterlist
+        activities.add(plan);
+
 
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), "Created activity", Snackbar.LENGTH_SHORT);
