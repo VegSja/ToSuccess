@@ -1,24 +1,31 @@
 package com.example.tosuccess;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
+
 
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.ViewHolder> {
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
+
         public TextView activityNameTextView;
+        public ToggleButton toggleButtonFinished;
 
         public ViewHolder(View itemView){
             // Stores the itemView in a public final member variable that can be used
@@ -26,13 +33,16 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
             super(itemView);
 
             activityNameTextView = (TextView) itemView.findViewById(R.id.activity_name);
+            toggleButtonFinished = (ToggleButton) itemView.findViewById(R.id.toggleButton);
+
         }
+
     }
 
     public List<Plan> mActivities;
 
     public ActivitiesAdapter(List<Plan> activities){
-        mActivities = activities;
+        this.mActivities = activities;
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -58,6 +68,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         //Set item views based on your views and data model
         TextView textView = viewHolder.activityNameTextView;
         textView.setText(activity.getName());
+
+        //Set boolean value based on what was fed into plan
+        ToggleButton toggleButton = viewHolder.toggleButtonFinished;
+        toggleButton.setChecked(activity.getCompleted());
+
+        activity.completed = toggleButton.isChecked();
     }
 
     //Returns the total count of items in the lsit

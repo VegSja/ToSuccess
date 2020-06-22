@@ -1,5 +1,6 @@
 package com.example.tosuccess;
 
+//AndroidX imports
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,10 +18,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.material.snackbar.Snackbar;
 
+//Standard JDK imports
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,24 +42,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Create the list. To avoid errors in the future
+        activities = new ArrayList<Plan>();
 
+        if (activities.size() > 0) {
+            createRv(activities);
+        }
+
+        //Set date to header
+        displayDateTime();
+    }
+    //Gets local date for header
+    public String getCurrentLocalDate(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd. MMMM yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
+    }
+
+    public void displayDateTime(){
+        TextView textView = (TextView) findViewById(R.id.headerDateText);
+        textView.setText(getCurrentLocalDate());
+    }
+
+    //Setup RecyclerViewer
+    public void createRv(ArrayList<Plan> planArray){
         //Lookup the recyclerview in activity layout
         RecyclerView rvActivities = (RecyclerView) findViewById(R.id.rvActivities);
 
-        //Initialize activities
-        activities = Plan.createPlanList(5);
+        //Initialize the variable activites
+        activities = planArray;
         //Create adapter passing in the sample user data
         adapter = new ActivitiesAdapter(activities);
         //Attach the adapter to the recyclerview to populate items
         rvActivities.setAdapter(adapter);
         //Set layout manager to position the items
         rvActivities.setLayoutManager(new LinearLayoutManager(this));
-
-
     }
 
     //Called when user touches the button
-    public void addActivty(View view) {
+    public void addActivtyButton(View view) {
         // Do something in response to button click
         System.out.println("Button clicked");
         createPopUp(view);
@@ -68,15 +97,37 @@ public class MainActivity extends AppCompatActivity {
         createActivity(textInput.getText().toString());
     }
 
+    //Is called when toggle on card is pressed
+    public void onToggleClicked(View view){
+        System.out.println(view);
+        ToggleButton toggleButton = (ToggleButton) view.findViewById(R.id.toggleButton);
+        List<Plan> activitiesInAdapter = adapter.mActivities;
+
+        //Debugging purposes only
+        for(int i=0; i<activitiesInAdapter.size(); i++){
+            if(activitiesInAdapter.get(i).completed){
+                System.out.println(activitiesInAdapter.get(i).activityName + " : " + String.valueOf(activitiesInAdapter.get(i).completed));
+            }
+        }
+    }
+
     public void createActivity(String activity_name){
         //Create activity
-        Plan plan = new Plan(activity_name);
-        //Add activity to adapterlist
-        activities.add(plan);
-        //Notify the adapter that Dataset/Array has changed
-        adapter.notifyDataSetChanged();
-        createPopUpMessage("Created Activity: " + activity_name);
+        Plan plan = new Plan(activity_name, true);
 
+        if(activities.size() > 0) {
+            //Add activity to adapterlist
+            activities.add(plan);
+            //Notify the adapter that Dataset/Array has changed
+            adapter.notifyDataSetChanged();
+        }
+        else if(activities.size() == 0){
+            //Add activity to adapterlist
+            activities.add(plan);
+            createRv(activities);
+        }
+        createPopUpMessage("Created Activity: " + activity_name);
+        System.out.println("ActivitiesAdapter: " + adapter.mActivities);
     }
 
     public void createPopUpMessage(String message){
