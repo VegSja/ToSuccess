@@ -10,9 +10,9 @@
     <color name="SecondaryTextColor">#546C6C</color>
 
     <color name="card_background">#1E2222</color>
-    <color name="popUpBackground">#1E2222</color>
+    <color name="popUpBackground">#337CA0</color>
 
-    <color name="greenGood">#519872</color>
+    <color name="greenGood">#157F1F</color>
     <color name="redBad">#f54242</color>
 
     <color name="textButton">#1E2222</color>

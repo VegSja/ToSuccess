@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    View popView;
+    PopUpClass popUpClass;
 
     ArrayList<Plan> activities;
 
@@ -58,33 +58,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createPopUp(View view){
-        System.out.println("Init pop");
-        //Inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        popView = inflater.inflate(R.layout.input_pop, null);
-
-        //Create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true;
-        final PopupWindow popupWindow = new PopupWindow(popView, width, height, focusable);
-
-        //Show popup window
-        popupWindow.showAtLocation(this.findViewById(R.id.main), Gravity.CENTER, 0, 0);
-
-        // dismiss the popup window when touched
-        popView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
-        });
+        popUpClass = new PopUpClass();
+        popUpClass.showPopupWindow(view);
     }
 
     //Is called when create activty button is pressed
     public void createActivityButton(View view){
-        EditText textInput = (EditText) popView.findViewById(R.id.textInput);
+        EditText textInput = (EditText) popUpClass.getPopupView().findViewById(R.id.textInput);
         createActivity(textInput.getText().toString());
     }
 
@@ -95,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         activities.add(plan);
         //Notify the adapter that Dataset/Array has changed
         adapter.notifyDataSetChanged();
+        createPopUpMessage("Created Activity: " + activity_name);
 
     }
 
