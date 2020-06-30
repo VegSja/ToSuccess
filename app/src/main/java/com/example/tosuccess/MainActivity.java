@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Plan> activities;
 
+    RecyclerView rvActivities;
     ActivitiesAdapter adapter;
 
     @Override
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     //Setup RecyclerViewer
     public void createRv(ArrayList<Plan> planArray){
         //Lookup the recyclerview in activity layout
-        RecyclerView rvActivities = (RecyclerView) findViewById(R.id.rvActivities);
+        rvActivities = (RecyclerView) findViewById(R.id.rvActivities);
 
         //Initialize the variable activites
         activities = planArray;
@@ -133,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
             activities.add(plan);
             createRv(activities);
         }
-        createPopUpMessage("Created Activity: " + activity_name);
-        System.out.println("ActivitiesAdapter: " + adapter.mActivities);
+        rvActivities.scheduleLayoutAnimation();
     }
 
     public void createPopUpMessage(String message){

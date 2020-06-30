@@ -29,8 +29,11 @@ public class PopUpClass {
         //Create a window with our parameters
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
+        popupWindow.setAnimationStyle(R.style.animation);
+
         //Set the location of the window on the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
 
         //Handler for clicking on the inactive zone of the window
         popupView.setOnTouchListener(new View.OnTouchListener() {
