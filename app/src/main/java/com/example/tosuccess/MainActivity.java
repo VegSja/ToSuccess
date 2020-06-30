@@ -13,6 +13,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -99,16 +101,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Is called when toggle on card is pressed
     public void onToggleClicked(View view){
-        System.out.println(view);
-        ToggleButton toggleButton = (ToggleButton) view.findViewById(R.id.toggleButton);
-        List<Plan> activitiesInAdapter = adapter.mActivities;
-
-        //Debugging purposes only
-        for(int i=0; i<activitiesInAdapter.size(); i++){
-            if(activitiesInAdapter.get(i).completed){
-                System.out.println(activitiesInAdapter.get(i).activityName + " : " + String.valueOf(activitiesInAdapter.get(i).completed));
-            }
-        }
+        ViewGroup activityCard = (ViewGroup) view.getParent();
+        TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
+        createPopUpMessage("Toggle on: " + textView.getText());
     }
 
     public void createActivity(String activity_name){
