@@ -101,14 +101,26 @@ public class MainActivity extends AppCompatActivity {
 
     //Is called when toggle on card is pressed
     public void onToggleClicked(View view){
+        ToggleButton toggle = (ToggleButton) view.findViewById(R.id.toggleButton);
         ViewGroup activityCard = (ViewGroup) view.getParent();
         TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
         createPopUpMessage("Toggle on: " + textView.getText());
+        String activityName = textView.getText().toString();
+        changeStateOfActivity(activityName, toggle.isChecked());
+    }
+
+    public void changeStateOfActivity(String activityName, Boolean state){
+        for(int i = 0; i < adapter.mActivities.size(); i++){
+            if (activityName == adapter.mActivities.get(i).activityName){
+                adapter.mActivities.get(i).completed = state;
+                createPopUpMessage("Changed state on: " + adapter.mActivities.get(i).activityName + " = " + state.booleanValue());
+            }
+        }
     }
 
     public void createActivity(String activity_name){
         //Create activity
-        Plan plan = new Plan(activity_name, true);
+        Plan plan = new Plan(activity_name, false);
 
         if(activities.size() > 0) {
             //Add activity to adapterlist
