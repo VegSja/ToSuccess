@@ -2,14 +2,14 @@
     <!-- Base application theme. -->
     <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/surfaceColor</item>
+        <item name="colorPrimaryDark">@color/MainBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.MaterialComponents.DayNight">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/surfaceColor</item>
+        <item name="colorPrimaryDark">@color/MainBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 

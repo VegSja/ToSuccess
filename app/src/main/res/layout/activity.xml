@@ -8,7 +8,7 @@
     android:layout_marginHorizontal="20dp"
     android:layout_marginTop="20dp"
     card_view:cardCornerRadius="10dp"
-    card_view:cardBackgroundColor="@color/card_background">
+    card_view:cardBackgroundColor="@color/surfaceColor">
 
     <RelativeLayout
         android:id="@+id/activity"

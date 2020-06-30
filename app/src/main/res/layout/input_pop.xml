@@ -10,14 +10,14 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/popUpBackground"
+        android:background="@color/floatingSurfaceColor"
         app:cardCornerRadius="5dp">
 
         <LinearLayout
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/popUpBackground"
+            android:background="@color/floatingSurfaceColor"
             android:orientation="vertical">
 
             <EditText
@@ -28,6 +28,8 @@
                 android:hint="@string/input_hint"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:backgroundTint="@color/primaryColor"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:padding="10dp"/>
 
 
@@ -36,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/button_add"
-                android:background="@color/colorAccent"
+                android:background="@color/primaryColor"
                 android:onClick="createActivityButton"/>
 
         </LinearLayout>
