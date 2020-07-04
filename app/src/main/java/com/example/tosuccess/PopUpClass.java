@@ -1,5 +1,7 @@
 package com.example.tosuccess;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,8 +14,13 @@ public class PopUpClass {
 
     private View popupView;
     EditText editText;
-    //PopupWindow display method
 
+    //Convert from pixels to denistypixels
+    public float convertPxToDp(Context context, float px){
+        return px/ context.getResources().getDisplayMetrics().density;
+    }
+
+    //PopupWindow display method
     public void showPopupWindow(final View view){
         //Create a View object yourself through inflater
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
@@ -21,7 +28,7 @@ public class PopUpClass {
 
         //Specify the length and width through constants
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
-        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
         //Make inactive items outside of Popupwindow
         boolean focusable = true;

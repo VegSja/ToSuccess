@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/surfaceColor</item>
         <item name="colorPrimaryDark">@color/MainBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
+<!--        <item name="android:timePickerDialogTheme">@style/timePickerStyle</item>-->
     </style>
 
     <style name="DarkTheme" parent="Theme.MaterialComponents.DayNight">
@@ -28,5 +29,12 @@
         <item name="android:textOn"></item>
         <item name="android:textOff"></item>
     </style>
+
+<!--    <style name="timePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">-->
+<!--        <item name="android:numbersTextColor">@color/PrimaryTextColor</item>-->
+<!--        <item name="android:numbersBackgroundColor">@color/surfaceColor</item>-->
+<!--        <item name="android:numbersSelectorColor">@color/primaryColor</item>-->
+<!--        <item name="android:headerBackground">@color/primaryColor</item>-->
+<!--    </style>-->
 
 </resources>

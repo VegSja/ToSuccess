@@ -3,4 +3,5 @@
     <string name="button_add">Add Activity</string>
     <string name="new_activity">New Activity</string>
     <string name="input_hint">Activity name...</string>
+    <string name="timepickerButton">Pick a starting time</string>
 </resources>

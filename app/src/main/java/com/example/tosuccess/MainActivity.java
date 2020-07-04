@@ -4,6 +4,7 @@ package com.example.tosuccess;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -98,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
     public void createActivityButton(View view){
         EditText textInput = (EditText) popUpClass.getPopupView().findViewById(R.id.textInput);
         createActivity(textInput.getText().toString());
+    }
+
+    public void showTimePickerDialog(View v){
+        DialogFragment newFragment = new TimerPickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
     //Is called when toggle on card is pressed
