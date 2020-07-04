@@ -26,5 +26,7 @@ public class TimerPickerFragment extends DialogFragment implements  TimePickerDi
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute){
         //Do something with the time chosen
+        int minutesAfterMidnight = hourOfDay * 60 + minute;
+
     }
 }

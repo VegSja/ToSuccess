@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createActivity(String activity_name){
         //Create activity
-        Plan plan = new Plan(activity_name, false);
+        Plan plan = new Plan(activity_name, 618,false);
 
         if(activities.size() > 0) {
             //Add activity to adapterlist

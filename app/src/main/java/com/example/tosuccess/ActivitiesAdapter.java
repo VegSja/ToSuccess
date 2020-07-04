@@ -25,6 +25,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         // for any view that will be set as you render a row
 
         public TextView activityNameTextView;
+        public TextView activityTimeTextView;
         public ToggleButton toggleButtonFinished;
 
         public ViewHolder(View itemView){
@@ -33,6 +34,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
             super(itemView);
 
             activityNameTextView = (TextView) itemView.findViewById(R.id.activity_name);
+            activityTimeTextView = (TextView) itemView.findViewById(R.id.activity_time);
             toggleButtonFinished = (ToggleButton) itemView.findViewById(R.id.toggleButton);
 
         }
@@ -68,6 +70,9 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         //Set item views based on your views and data model
         TextView textView = viewHolder.activityNameTextView;
         textView.setText(activity.getName());
+
+        TextView timeView = viewHolder.activityTimeTextView;
+        timeView.setText(activity.getTime());
 
         //Set boolean value based on what was fed into plan
         ToggleButton toggleButton = viewHolder.toggleButtonFinished;
