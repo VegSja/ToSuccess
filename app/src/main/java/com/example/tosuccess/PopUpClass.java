@@ -7,21 +7,24 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 public class PopUpClass {
 
     private View popupView;
-    EditText editText;
+    private FrameLayout mainScreenLayout;
 
-    //Convert from pixels to denistypixels
-    public float convertPxToDp(Context context, float px){
-        return px/ context.getResources().getDisplayMetrics().density;
+    public PopUpClass(FrameLayout mainLayout){
+        mainScreenLayout = mainLayout;
     }
 
     //PopupWindow display method
     public void showPopupWindow(final View view){
+        //Set opacity of background
+        mainScreenLayout.getForeground().setAlpha(220);
+
         //Create a View object yourself through inflater
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
         popupView = inflater.inflate(R.layout.input_pop, null);
@@ -46,13 +49,22 @@ public class PopUpClass {
         popupView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 //Close the window when clicked
                 popupWindow.dismiss();
                 return true;
             }
         });
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                //Reset opacity of background
+                mainScreenLayout.getForeground().setAlpha(0);
+            }
+        });
+
     }
+
     public View getPopupView(){
         return popupView;
     }

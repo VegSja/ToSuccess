@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -27,6 +28,8 @@ import java.util.Collections;
 import static java.lang.String.valueOf;
 
 public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener {
+
+    FrameLayout mainLayout;
 
     PopUpClass popUpClass;
 
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         if (activities.size() > 0) {
             createRv(activities);
         }
+
+        //Change dimness of foreground
+        mainLayout = (FrameLayout) findViewById(R.id.main);
+        mainLayout.getForeground().setAlpha(0);
 
         //Set date to header
         displayDateTime();
@@ -86,8 +93,9 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void createPopUp(View view){
-        popUpClass = new PopUpClass();
+        popUpClass = new PopUpClass(mainLayout);
         popUpClass.showPopupWindow(view);
+        //Set the opacity of the main layout
     }
 
     //Is called when create activty button is pressed

@@ -11,18 +11,19 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/floatingSurfaceColor"
+        android:background="@color/surfaceColor"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/floatingSurfaceColor"
+            android:background="@color/surfaceColor"
             android:padding="10dp">
 
 
             <EditText
                 android:id="@+id/textInput"
+                android:textColor="@color/PrimaryTextColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -30,6 +31,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="15dp"
                 android:backgroundTint="@color/primaryColor"
+                android:textColorHint="@color/PrimaryTextColorDarker"
                 android:hint="@string/input_hint"
                 android:padding="10dp"
                 android:textCursorDrawable="@drawable/color_cursor"

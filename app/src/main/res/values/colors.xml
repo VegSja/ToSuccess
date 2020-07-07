@@ -8,6 +8,7 @@
     <color name="MainBackground">#000000</color>
 
     <color name="PrimaryTextColor">#FFFFFF</color>
+    <color name="PrimaryTextColorDarker">#A2A0A0</color>
     <color name="SecondaryTextColor">#000000</color>
 
 </resources>
