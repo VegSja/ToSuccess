@@ -2,25 +2,16 @@ package com.example.tosuccess;
 
 //AndroidX imports
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
+
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -30,10 +21,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener {
 
     PopUpClass popUpClass;
 
@@ -41,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView rvActivities;
     ActivitiesAdapter adapter;
+
+    int timePickerMinutesAfterMidnight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +89,26 @@ public class MainActivity extends AppCompatActivity {
     //Is called when create activty button is pressed
     public void createActivityButton(View view){
         EditText textInput = (EditText) popUpClass.getPopupView().findViewById(R.id.textInput);
-        createActivity(textInput.getText().toString());
+        createActivity(textInput.getText().toString(), timePickerMinutesAfterMidnight);
     }
 
+    //Timepicker actions ----------------------------
     public void showTimePickerDialog(View v){
         DialogFragment newFragment = new TimerPickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment){
+        if(fragment instanceof TimerPickerFragment){
+            TimerPickerFragment timerPickerFragment = (TimerPickerFragment) fragment;
+            timerPickerFragment.setOnTimeSetListener(this);
+        }
+    }
+
+    public void onTimeSelected(int minutesAfterMidnight){
+        createPopUpMessage("Minutes after midnight: " + String.valueOf(minutesAfterMidnight));
+        timePickerMinutesAfterMidnight = minutesAfterMidnight;
     }
 
     //Is called when toggle on card is pressed
@@ -125,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void createActivity(String activity_name){
+    public void createActivity(String activity_name, int minutesAfterMidnight){
         //Create activity
-        Plan plan = new Plan(activity_name, 618,false);
+        Plan plan = new Plan(activity_name, minutesAfterMidnight,false);
 
         if(activities.size() > 0) {
             //Add activity to adapterlist
