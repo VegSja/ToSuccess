@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void onTimeSelected(int minutesAfterMidnight){
-        createPopUpMessage("Minutes after midnight: " + String.valueOf(minutesAfterMidnight));
 
         //Change the button text
         Button timeButton = (Button) popUpClass.getPopupView().findViewById(R.id.TimeButton);
@@ -134,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         ToggleButton toggle = (ToggleButton) view.findViewById(R.id.toggleButton);
         ViewGroup activityCard = (ViewGroup) view.getParent();
         TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
-        createPopUpMessage("Toggle on: " + textView.getText());
         String activityName = textView.getText().toString();
         changeStateOfActivity(activityName, toggle.isChecked());
     }
@@ -143,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         for(int i = 0; i < adapter.mActivities.size(); i++){
             if (activityName == adapter.mActivities.get(i).activityName){
                 adapter.mActivities.get(i).completed = state;
-                createPopUpMessage("Changed state on: " + adapter.mActivities.get(i).activityName + " = " + state.booleanValue());
             }
         }
     }

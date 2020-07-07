@@ -6,15 +6,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.SimpleTimeZone;
+
 public class PopUpClass {
 
     private View popupView;
     private FrameLayout mainScreenLayout;
+    private String localTime;
 
     public PopUpClass(FrameLayout mainLayout){
         mainScreenLayout = mainLayout;
@@ -44,6 +50,7 @@ public class PopUpClass {
         //Set the location of the window on the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        setTime();
 
         //Handler for clicking on the inactive zone of the window
         popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -63,6 +70,13 @@ public class PopUpClass {
             }
         });
 
+    }
+    //Set value of time
+    public void setTime(){
+        Button timeButton = (Button) popupView.findViewById(R.id.TimeButton);
+        Calendar cal = Calendar.getInstance();
+        localTime = new SimpleDateFormat("HH:mm").format(cal.getTime());
+        timeButton.setText(localTime);
     }
 
     public View getPopupView(){
