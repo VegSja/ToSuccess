@@ -14,15 +14,23 @@ import java.util.List;
 
 import static java.lang.String.valueOf;
 
-public class Plan {
+public class Plan implements Comparable<Plan>{
     String activityName;
     int minutesAfterMidnight;
+    String startingTime;
     Boolean completed;
 
-    public Plan(String ActivityName, int minutesAfterMidnight, Boolean activityCompleted){
+    @Override
+    public int compareTo(Plan p){
+        return this.minutesAfterMidnight - p.getMinutes();
+    }
+
+    public Plan(String ActivityName, int minutesAfterMidnight, String startingTime,  Boolean activityCompleted){
         activityName = ActivityName;
-        completed = activityCompleted;
         this.minutesAfterMidnight = minutesAfterMidnight;
+        this.startingTime = startingTime;
+        completed = activityCompleted;
+
     }
     public String getName(){
         return activityName;
@@ -30,39 +38,6 @@ public class Plan {
     public Boolean getCompleted(){
         return  completed;
     }
-
-    public String getTime(){
-        String hoursString = "";
-        String minuteString = "";
-
-
-        int hoursAfterMidnight = minutesAfterMidnight/60;
-        if (hoursAfterMidnight < 10){
-            hoursString = "0" + valueOf(hoursAfterMidnight);
-        }
-        else if(hoursAfterMidnight >= 10){
-            hoursString = valueOf(hoursAfterMidnight);
-        }
-        int restMinutesAfterMidnight = (int) minutesAfterMidnight%60;
-        if (restMinutesAfterMidnight < 10){
-            minuteString = "0" + valueOf(restMinutesAfterMidnight);
-        }
-        else if(restMinutesAfterMidnight >= 10){
-            minuteString = valueOf(restMinutesAfterMidnight);
-        }
-
-        String timeStr = hoursString + ":" + minuteString;
-        return timeStr;
-    }
-
-    public static ArrayList<Plan> createPlanList(int nbOfPlans){
-        ArrayList<Plan> plans = new ArrayList<Plan>();
-
-        for (int i=1; i<nbOfPlans; i++){
-            plans.add(new Plan("Activtity" + i, 100, false));
-        }
-        return plans;
-    }
-
-
+    public String getTime(){return startingTime;}
+    public int getMinutes(){return minutesAfterMidnight;}
 }

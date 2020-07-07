@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -21,6 +22,9 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.Collections;
+
+import static java.lang.String.valueOf;
 
 public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener {
 
@@ -108,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
     public void onTimeSelected(int minutesAfterMidnight){
         createPopUpMessage("Minutes after midnight: " + String.valueOf(minutesAfterMidnight));
+
+        //Change the button text
+        Button timeButton = (Button) popUpClass.getPopupView().findViewById(R.id.TimeButton);
+        timeButton.setText(minutesToTimeStr(minutesAfterMidnight));
+
+        //Sets up the variable that the created activity depends on
         timePickerMinutesAfterMidnight = minutesAfterMidnight;
     }
 
@@ -132,11 +142,15 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
     public void createActivity(String activity_name, int minutesAfterMidnight){
         //Create activity
-        Plan plan = new Plan(activity_name, minutesAfterMidnight,false);
+        Plan plan = new Plan(activity_name, minutesAfterMidnight, minutesToTimeStr(minutesAfterMidnight),false);
 
         if(activities.size() > 0) {
             //Add activity to adapterlist
             activities.add(plan);
+
+            //Sort the activites before sending to array adapter
+            Collections.sort(activities);
+
             //Notify the adapter that Dataset/Array has changed
             adapter.notifyDataSetChanged();
         }
@@ -152,5 +166,29 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), message, Snackbar.LENGTH_SHORT);
         popUpMessage.show();
+    }
+
+    public String minutesToTimeStr(int minutesAfterMidnight){
+        String hoursString = "";
+        String minuteString = "";
+
+
+        int hoursAfterMidnight = minutesAfterMidnight/60;
+        if (hoursAfterMidnight < 10){
+            hoursString = "0" + valueOf(hoursAfterMidnight);
+        }
+        else if(hoursAfterMidnight >= 10){
+            hoursString = valueOf(hoursAfterMidnight);
+        }
+        int restMinutesAfterMidnight = (int) minutesAfterMidnight%60;
+        if (restMinutesAfterMidnight < 10){
+            minuteString = "0" + valueOf(restMinutesAfterMidnight);
+        }
+        else if(restMinutesAfterMidnight >= 10){
+            minuteString = valueOf(restMinutesAfterMidnight);
+        }
+
+        String timeStr = hoursString + ":" + minuteString;
+        return timeStr;
     }
 }

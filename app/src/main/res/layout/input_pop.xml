@@ -35,12 +35,12 @@
                 android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintBottom_toTopOf="@+id/TimeButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/TimeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -49,7 +49,8 @@
                 android:padding="10dp"
                 android:background="@color/primaryColor"
                 android:onClick="showTimePickerDialog"
-                android:text="@string/timepickerButton"
+                android:text="currentTime"
+                android:drawableLeft="@drawable/ic_baseline_access_time_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
