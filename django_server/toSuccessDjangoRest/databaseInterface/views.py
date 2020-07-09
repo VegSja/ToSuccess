@@ -12,6 +12,7 @@ def activity_list(request):
     if request.method == 'GET':
         activities = Activity.objects.all()
         serializer = ActivitySerializer(activities, many=True)
+        print("GET Method called")
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
@@ -21,6 +22,24 @@ def activity_list(request):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+@csrf_exempt   
+def activity_detail(request, name):
+    print("Activity detail called METHOD: " + request.method)
+    try:
+        activity = Activity.objects.get(activity_name=name)
+    except Activity.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ActivitySerializer(activity)
+        return JsonResponse(serializer.data)
+    
+    if request.method == 'DELETE':
+        activity.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
 
 
 # class ActivityViewSet(viewsets.ModelViewSet):

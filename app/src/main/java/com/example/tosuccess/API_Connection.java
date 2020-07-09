@@ -38,6 +38,11 @@ public class API_Connection {
         void onSuccess(String response);
         void onError(String errorMessage);
     }
+    public interface VolleyDeleteCallBack{
+        void onSuccess(String response);
+        void onError(String errorMessage);
+    }
+
 
     String url = "http://62.16.199.208:3690/activities/";
 
@@ -80,9 +85,7 @@ public class API_Connection {
             jsonobj.put("activity_name", name);
             jsonobj.put("minutes_after_midnight", minutes_after_midnight);
             jsonobj.put("date", dayNumber);
-            System.out.println("JSON Object to send: " + jsonobj.toString());
         }catch (JSONException e){
-            System.out.println("Error occured while building JSON!");
             e.printStackTrace();
         }
 
@@ -91,17 +94,36 @@ public class API_Connection {
             @Override
             public void onResponse(JSONObject response) {
                 callBack.onSuccess(response.toString());
-                Log.d("Response", response.toString());
             }
         },
         new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 callBack.onError(error.toString());
-                Log.d("Error.response", error.toString());
             }
         });
         queue.add(postRequest);
+    }
+    
+    public void deleteRequest(String name, final VolleyDeleteCallBack callBack){
+        String deleteUrl = url.concat(name + '/');
+        RequestQueue queue = Volley.newRequestQueue(this.appContext);
+        Request dr = new StringRequest(Request.Method.DELETE, deleteUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Delete response: " + response);
+                        callBack.onSuccess(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Delete error" + error.toString());
+                        callBack.onSuccess(error.toString());
+                    }
+                });
+        queue.add(dr);
     }
 
     public String getRequestResponse(){

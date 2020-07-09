@@ -181,6 +181,25 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         rvActivities.scheduleLayoutAnimation();
     }
 
+    public void deleteActivity(View view){
+        ViewGroup activityCard = (ViewGroup) view.getParent();
+        TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
+        String activityName = textView.getText().toString();
+
+        connection.deleteRequest(activityName, new API_Connection.VolleyDeleteCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully deleted activity");
+                populateActivitiesFromServer();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("Could not delete activity");
+            }
+        });
+    }
+
     public void createPopUpMessage(String message){
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), message, Snackbar.LENGTH_SHORT);
