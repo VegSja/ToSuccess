@@ -20,11 +20,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class API_Connection {
 
-    public interface VolleyCallBack{
+    public interface VolleyGetCallBack{
+        void onSuccess(String response);
+        void onError(String errorMessage);
+    }
+    public interface VolleyPushCallBack{
         void onSuccess(String response);
         void onError(String errorMessage);
     }
@@ -41,7 +47,7 @@ public class API_Connection {
     }
 
 
-    public void getRequest(final VolleyCallBack callBack){
+    public void getRequest(final VolleyGetCallBack callBack){
         RequestQueue queue = Volley.newRequestQueue(this.appContext);
 
         //Request json response form the URL
@@ -60,6 +66,34 @@ public class API_Connection {
             }
         });
         queue.add(jsonRequest);
+    }
+
+    public void postRequest(final VolleyPushCallBack callBack){
+        RequestQueue queue = Volley.newRequestQueue(this.appContext);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callBack.onSuccess(response);
+                Log.d("Response", response);
+            }
+        },
+        new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callBack.onError(error.toString());
+                Log.d("Error.response", error.toString());
+            }
+        }
+    ) {
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("activity_name", "activity_name1");
+                params.put("minutes_after_midnight", "10");
+                return params;
+            }
+        };
+        queue.add(postRequest);
     }
 
     public String getRequestResponse(){

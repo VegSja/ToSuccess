@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Collections;
 
 import static java.lang.String.valueOf;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
     RecyclerView rvActivities;
     ActivitiesAdapter adapter;
+
+    API_Connection connection;
 
     int timePickerMinutesAfterMidnight;
 
@@ -68,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd. MMMM yyyy");
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
+    }
+
+    public Integer getCurrentDayOfYear(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     public void displayDateTime(){
@@ -151,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     public void createActivity(String activity_name, int minutesAfterMidnight){
         //Create activity
         Plan plan = new Plan(activity_name, minutesAfterMidnight, minutesToTimeStr(minutesAfterMidnight),false);
+        sendActivityToServer(activity_name, minutesAfterMidnight, getCurrentDayOfYear());
 
         if(activities.size() > 0) {
             //Add activity to adapterlist
@@ -177,14 +186,14 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void populateActivitiesFromServer(){
-        final API_Connection connection = new API_Connection(this);
+        connection = new API_Connection(this);
 
         //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
-        connection.getRequest(new API_Connection.VolleyCallBack() {
+        connection.getRequest(new API_Connection.VolleyGetCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully connected to server");
-                JsonReader jReader = new JsonReader(response);
+                JsonReader jReader = new JsonReader(response, getCurrentDayOfYear());
                 for(int i=0; i<jReader.getActivityName().size(); i++) {
                     createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnight().get(i));
                 }
@@ -193,6 +202,20 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
             @Override
             public void onError(String errorMessage) {
                 createPopUpMessage(errorMessage);
+            }
+        });
+    }
+
+    public void sendActivityToServer(String activity_name, int minutesAfterMidnight, int dayNumber){
+        connection.postRequest(new API_Connection.VolleyPushCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully pushed to server");
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("Failed to push to server");
             }
         });
     }
