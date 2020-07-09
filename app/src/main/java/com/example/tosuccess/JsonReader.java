@@ -36,17 +36,13 @@ public class JsonReader {
         try {
             JSONArray arr = new JSONArray(JsonString);
             for (int i = 0; i < arr.length(); i++) {
-                System.out.println("Json object: " + arr.getJSONObject(i).getInt("date") + " | Checking with date: " + String.valueOf(dayOfYear));
 
                 if(arr.getJSONObject(i).getInt("date") == dayOfYear) { //Currently we pull everything from the server and sort it on the device. This is not good!
                     activity_name.add(arr.getJSONObject(i).getString("activity_name"));
                     seconds_after_midnight.add(arr.getJSONObject(i).getInt("minutes_after_midnight"));
-                }else{
-                    System.out.println("NOT A MATCH!");
                 }
             }
         } catch (JSONException j){
-            System.out.println("KEEPS FAILING");
             j.printStackTrace();
         }
     }

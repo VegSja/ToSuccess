@@ -9,9 +9,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -24,6 +26,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class API_Connection {
 
@@ -36,7 +39,7 @@ public class API_Connection {
         void onError(String errorMessage);
     }
 
-    String url = "http://62.16.199.208:3690/activities";
+    String url = "http://62.16.199.208:3690/activities/";
 
     Context appContext;
 
@@ -62,20 +65,33 @@ public class API_Connection {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("ERROR!!!!: " + error.toString());
                 callBack.onError(error.toString());
             }
         });
         queue.add(jsonRequest);
     }
 
-    public void postRequest(final VolleyPushCallBack callBack){
+    public void postRequest(String name, Integer minutes_after_midnight, Integer dayNumber, final VolleyPushCallBack callBack){
+        JSONObject jsonobj;
+        jsonobj = new JSONObject();
+        try{
+            //Adding some keys
+            jsonobj.put("id", 1);
+            jsonobj.put("activity_name", name);
+            jsonobj.put("minutes_after_midnight", minutes_after_midnight);
+            jsonobj.put("date", dayNumber);
+            System.out.println("JSON Object to send: " + jsonobj.toString());
+        }catch (JSONException e){
+            System.out.println("Error occured while building JSON!");
+            e.printStackTrace();
+        }
+
         RequestQueue queue = Volley.newRequestQueue(this.appContext);
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, jsonobj, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
-                callBack.onSuccess(response);
-                Log.d("Response", response);
+            public void onResponse(JSONObject response) {
+                callBack.onSuccess(response.toString());
+                Log.d("Response", response.toString());
             }
         },
         new Response.ErrorListener() {
@@ -84,16 +100,7 @@ public class API_Connection {
                 callBack.onError(error.toString());
                 Log.d("Error.response", error.toString());
             }
-        }
-    ) {
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("activity_name", "activity_name1");
-                params.put("minutes_after_midnight", "10");
-                return params;
-            }
-        };
+        });
         queue.add(postRequest);
     }
 

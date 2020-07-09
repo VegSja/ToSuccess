@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
@@ -112,7 +113,9 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     //Is called when create activty button is pressed
     public void createActivityButton(View view){
         EditText textInput = (EditText) popUpClass.getPopupView().findViewById(R.id.textInput);
-        createActivity(textInput.getText().toString(), timePickerMinutesAfterMidnight);
+        String activity_name =  textInput.getText().toString();
+        sendActivityToServer(activity_name, timePickerMinutesAfterMidnight, getCurrentDayOfYear()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
+        createActivity(activity_name, timePickerMinutesAfterMidnight);
     }
 
     //Timepicker actions ----------------------------
@@ -159,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     public void createActivity(String activity_name, int minutesAfterMidnight){
         //Create activity
         Plan plan = new Plan(activity_name, minutesAfterMidnight, minutesToTimeStr(minutesAfterMidnight),false);
-        sendActivityToServer(activity_name, minutesAfterMidnight, getCurrentDayOfYear());
 
         if(activities.size() > 0) {
             //Add activity to adapterlist
@@ -186,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void populateActivitiesFromServer(){
+
+        activities = new ArrayList<Plan>(); //Clear the activities before updating the entire list
+
         connection = new API_Connection(this);
 
         //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
@@ -207,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void sendActivityToServer(String activity_name, int minutesAfterMidnight, int dayNumber){
-        connection.postRequest(new API_Connection.VolleyPushCallBack() {
+        connection.postRequest(activity_name, minutesAfterMidnight, dayNumber,new API_Connection.VolleyPushCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully pushed to server");
