@@ -34,14 +34,13 @@ public class JsonReader {
         activity_name = new ArrayList<String>();
         seconds_after_midnight = new ArrayList<Integer>();
         try {
-            JSONObject obj = new JSONObject(JsonString);
-            JSONArray arr = obj.getJSONArray("results");
+            JSONArray arr = new JSONArray(JsonString);
             for (int i = 0; i < arr.length(); i++) {
                 System.out.println("Json object: " + arr.getJSONObject(i).getInt("date") + " | Checking with date: " + String.valueOf(dayOfYear));
 
                 if(arr.getJSONObject(i).getInt("date") == dayOfYear) { //Currently we pull everything from the server and sort it on the device. This is not good!
                     activity_name.add(arr.getJSONObject(i).getString("activity_name"));
-                    seconds_after_midnight.add(arr.getJSONObject(i).getInt("seconds_after_midnight"));
+                    seconds_after_midnight.add(arr.getJSONObject(i).getInt("minutes_after_midnight"));
                 }else{
                     System.out.println("NOT A MATCH!");
                 }

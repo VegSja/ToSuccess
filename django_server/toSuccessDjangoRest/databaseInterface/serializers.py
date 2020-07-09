@@ -1,7 +1,7 @@
 from databaseInterface.models import Activity
 from rest_framework import serializers
 
-class ActivitySerializer(serializers.HyperlinkedModelSerializer):
+class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = ['url', 'activity_name', 'seconds_after_midnight', 'date']
+        fields = ['id', 'activity_name', 'minutes_after_midnight', 'date']
