@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //Create the list. To avoid errors in the future
         activities = new ArrayList<Plan>();
 
@@ -57,7 +58,11 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         //Set date to header
         displayDateTime();
+
+        populateActivitiesFromServer();
     }
+
+
     //Gets local date for header
     public String getCurrentLocalDate(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd. MMMM yyyy");
@@ -86,9 +91,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     //Called when user touches the button
-    public void addActivtyButton(View view) {
-        // Do something in response to button click
-        System.out.println("Button clicked");
+    public void addActivtyButton(View view) throws InterruptedException {
         createPopUp(view);
     }
 
@@ -171,6 +174,27 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), message, Snackbar.LENGTH_SHORT);
         popUpMessage.show();
+    }
+
+    public void populateActivitiesFromServer(){
+        final API_Connection connection = new API_Connection(this);
+
+        //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
+        connection.getRequest(new API_Connection.VolleyCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully connected to server");
+                JsonReader jReader = new JsonReader(response);
+                for(int i=0; i<jReader.getActivityName().size(); i++) {
+                    createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnight().get(i));
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage(errorMessage);
+            }
+        });
     }
 
     public String minutesToTimeStr(int minutesAfterMidnight){
