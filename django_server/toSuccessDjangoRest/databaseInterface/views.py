@@ -1,5 +1,6 @@
 from databaseInterface.models import Activity
 from databaseInterface.serializers import ActivitySerializer
+from databaseInterface.token_validation import token_validation
 
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
@@ -44,11 +45,5 @@ def activity_detail(request, name):
 @csrf_exempt
 def sign_in(request, idToken):
 
-
     if request.method == 'POST':
-        print("Recieved ID token: " + idToken)
-
-# class ActivityViewSet(viewsets.ModelViewSet):
-#     #API endpoint that allows users to be viewed or edited
-#     queryset = Activity.objects.all().order_by('seconds_after_midnight')
-#     serializer_class = ActivitySerializer
+        token_validation(idToken)
