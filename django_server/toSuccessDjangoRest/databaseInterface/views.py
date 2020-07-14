@@ -18,18 +18,20 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 
 class activity_list_view(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         activities = Activity.objects.all()
         serializer = ActivitySerializer(activities, many=True)
         return JsonResponse(serializer.data, safe=False)
     
-    # def post(self, request):
-    #     data = JSONParser().parse(request)
-    #     serializer = ActivitySerializer(data=data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return JsonResponse(serializer.data, status=201)
-    #     return JsonResponse(serializer.errors, status=400)
+    def post(self, request):
+        data = JSONParser().parse(request)
+        serializer = ActivitySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
 
 class GoogleView(APIView):

@@ -24,6 +24,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 0;
 
+    Logger logger = new Logger();
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -117,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startMainActivity(idToken);
         }catch (ApiException e){
             //Failed login
-            System.out.println("[USER ERROR] : signInResult:failedCode:" + e.getStatusCode());
+            logger.errorMessage("signInResult:failedCode:" + e.getStatusCode());
         }
     }
 }

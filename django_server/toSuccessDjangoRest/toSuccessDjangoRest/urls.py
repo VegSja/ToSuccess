@@ -28,5 +28,6 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include('databaseInterface.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('admin/', admin.site.urls),
     # url(r'^activitiesapi/$', views.activity_list, name='activitiesapi'),
 ]

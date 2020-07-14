@@ -22,11 +22,8 @@ public class JsonReader {
     public JsonReader(String json, Integer filterDate){
         JsonString = json;
         dayOfYear = filterDate;
-        System.out.println("JSON STRING: " + JsonString);
         if(JsonString != null) {
             readJson();
-        }else{
-            System.out.println("Json string error!");
         }
     }
 

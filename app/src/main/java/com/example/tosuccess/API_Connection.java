@@ -3,6 +3,7 @@ package com.example.tosuccess;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -50,11 +51,15 @@ public class API_Connection {
 
 
     String url = "http://62.16.199.208:3690/activities/";
-    String loginUrl = "http://62.16.199.208:3690/tokensignin/";
+    String loginUrl = "http://62.16.199.208:3690/google/";
 
     Context appContext;
 
     String requestResponse;
+
+    String backendAccessToken;
+
+    Logger logger = new Logger();
 
 
     public API_Connection(Context appContext){
@@ -62,14 +67,14 @@ public class API_Connection {
     }
 
 
-    public void getRequest(final VolleyGetCallBack callBack){
+    public void getRequest(final String accessToken, final VolleyGetCallBack callBack){
         RequestQueue queue = Volley.newRequestQueue(this.appContext);
 
         //Request json response form the URL
         StringRequest jsonRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                System.out.println("Response: " + response.toString());
+                logger.loggerMessage("Response: " + response.toString());
                 requestResponse = response.toString();
                 callBack.onSuccess(response.toString());
             }
@@ -78,11 +83,20 @@ public class API_Connection {
             public void onErrorResponse(VolleyError error) {
                 callBack.onError(error.toString());
             }
-        });
+        }
+    ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError{
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Authorization", " Bearer " + accessToken);
+                return params;
+            }
+        };
         queue.add(jsonRequest);
+        logger.statusMessage("Sending request to GET from server: " + jsonRequest.toString());
     }
 
-    public void postRequest(String name, Integer minutes_after_midnight, Integer dayNumber, final VolleyPushCallBack callBack){
+    public void postRequest(final String accessToken, String name, Integer minutes_after_midnight, Integer dayNumber, final VolleyPushCallBack callBack){
         JSONObject jsonobj;
         jsonobj = new JSONObject();
         try{
@@ -107,25 +121,33 @@ public class API_Connection {
             public void onErrorResponse(VolleyError error) {
                 callBack.onError(error.toString());
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError{
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Authorization", " Bearer " + accessToken);
+                return params;
+            }
+        };
+        logger.statusMessage("Sending request to POST from server: " + postRequest.toString());
         queue.add(postRequest);
     }
     
     public void deleteRequest(String name, final VolleyDeleteCallBack callBack){
         String deleteUrl = url.concat(name + '/');
         RequestQueue queue = Volley.newRequestQueue(this.appContext);
-        Request dr = new StringRequest(Request.Method.DELETE, deleteUrl,
+        StringRequest dr = new StringRequest(Request.Method.DELETE, deleteUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("Delete response: " + response);
+                        logger.loggerMessage("Delete response: " + response);
                         callBack.onSuccess(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println("Delete error" + error.toString());
+                        logger.errorMessage("Delete error " + error.toString());
                         callBack.onSuccess(error.toString());
                     }
                 });
@@ -133,19 +155,34 @@ public class API_Connection {
     }
 
     public void loginRequest(String userTokenID, final VolleyLoginCallBack callBack){
-        String postLoginUrl = loginUrl + userTokenID + "/";
+        JSONObject jsonobj;
+        jsonobj = new JSONObject();
+        try{
+            //Adding some keys
+            jsonobj.put("token", userTokenID);
+            logger.statusMessage("Adding token to json to send to server");
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        logger.statusMessage("Trying to send json object to server: " + jsonobj);
         RequestQueue queue = Volley.newRequestQueue(this.appContext);
-        StringRequest loginRequest = new StringRequest(Request.Method.POST, postLoginUrl, new Response.Listener<String>(){
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, loginUrl, jsonobj, new Response.Listener<JSONObject>(){
             @Override
-            public void onResponse(String response){
-                System.out.println("Login Response: " + response);
-                callBack.onSuccess(response);
+            public void onResponse(JSONObject response){
+                //Get the access token
+                try {
+                    backendAccessToken = response.getString("access_token");
+                    logger.successMessage("Access token retrieved: " + backendAccessToken);
+                } catch (JSONException e){
+                    logger.errorMessage("Couldn't retrive access token from: " + response.toString());
+                }
+                callBack.onSuccess(response.toString());
             }
         },
         new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error){
-                System.out.println("Login ERROR: " + error.toString());
+                logger.errorMessage("Connection to server " + error.toString());
                 callBack.onSuccess(error.toString());}
         });
         queue.add(loginRequest);

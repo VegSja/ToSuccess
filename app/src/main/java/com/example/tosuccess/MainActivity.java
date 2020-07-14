@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
     String userTokenID;
 
+    Logger logger = new Logger();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         Intent intent = getIntent();
         userTokenID = intent.getStringExtra("IDToken");
 
-        System.out.println("IDTOKEN: " + userTokenID);
+        logger.loggerMessage("IDTOKEN: " + userTokenID);
 
         //Create the list. To avoid errors in the future
         activities = new ArrayList<Plan>();
@@ -225,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         activities = new ArrayList<Plan>(); //Clear the activities before updating the entire list
 
         //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
-        connection.getRequest(new API_Connection.VolleyGetCallBack() {
+        connection.getRequest(connection.backendAccessToken, new API_Connection.VolleyGetCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully connected to server");
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void sendActivityToServer(String activity_name, int minutesAfterMidnight, int dayNumber){
-        connection.postRequest(activity_name, minutesAfterMidnight, dayNumber,new API_Connection.VolleyPushCallBack() {
+        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnight, dayNumber,new API_Connection.VolleyPushCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully pushed to server");
