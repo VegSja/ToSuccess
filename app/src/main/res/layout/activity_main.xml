@@ -54,13 +54,12 @@
         android:layout_alignParentRight="true"
         android:onClick="addActivtyButton"/>
 
-<!--    <Button-->
-<!--        android:id="@+id/button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:background="#DE350B"-->
-
-<!--        android:text="@string/button_add" />-->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:onClick="startLogin"/>
 
 </FrameLayout>

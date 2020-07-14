@@ -1,6 +1,7 @@
 package com.example.tosuccess;
 
 //AndroidX imports
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +19,13 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 //Standard JDK imports
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -29,7 +35,7 @@ import java.util.Collections;
 
 import static java.lang.String.valueOf;
 
-public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener {
+public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener, Serializable {
 
     FrameLayout mainLayout;
 
@@ -44,10 +50,12 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
     int timePickerMinutesAfterMidnight;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //Create the list. To avoid errors in the future
         activities = new ArrayList<Plan>();
@@ -266,5 +274,11 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         String timeStr = hoursString + ":" + minuteString;
         return timeStr;
+    }
+
+
+    public void startLogin(View v){
+        Intent loginActivityIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginActivityIntent);
     }
 }
