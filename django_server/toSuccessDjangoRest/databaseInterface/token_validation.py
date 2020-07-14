@@ -14,7 +14,8 @@ class token_validation:
 
             #Get the user's Google Account ID from the decoded token
             userid = idinfo['sub']
-            print("SUCCESS: Successfully validated token")    
+            self.email = idinfo['email']
+            print("SUCCESS: Successfully validated token |          USERID: " + userid + "              |           Email: " + self.email)    
         except ValueError:
             print("ERROR: Invalid token")
             pass
