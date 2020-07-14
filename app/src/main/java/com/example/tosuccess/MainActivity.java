@@ -50,12 +50,18 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
     int timePickerMinutesAfterMidnight;
 
+    String userTokenID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+        userTokenID = intent.getStringExtra("IDToken");
+
+        System.out.println("IDTOKEN: " + userTokenID);
 
         //Create the list. To avoid errors in the future
         activities = new ArrayList<Plan>();
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         //Set date to header
         displayDateTime();
 
-        populateActivitiesFromServer();
+        loginToBackend();
     }
 
 
@@ -218,8 +224,6 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         activities = new ArrayList<Plan>(); //Clear the activities before updating the entire list
 
-        connection = new API_Connection(this);
-
         //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
         connection.getRequest(new API_Connection.VolleyGetCallBack() {
             @Override
@@ -274,6 +278,22 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         String timeStr = hoursString + ":" + minuteString;
         return timeStr;
+    }
+
+    public void loginToBackend(){
+        connection = new API_Connection(this);
+        connection.loginRequest(userTokenID, new API_Connection.VolleyLoginCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully connected to backend as user");
+                populateActivitiesFromServer();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("ERROR: " + errorMessage);
+            }
+        });
     }
 
 

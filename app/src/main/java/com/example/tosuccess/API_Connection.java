@@ -42,9 +42,15 @@ public class API_Connection {
         void onSuccess(String response);
         void onError(String errorMessage);
     }
+    public interface VolleyLoginCallBack{
+        void onSuccess(String response);
+        void onError(String errorMessage);
+    }
+
 
 
     String url = "http://62.16.199.208:3690/activities/";
+    String loginUrl = "http://62.16.199.208:3690/tokensignin/";
 
     Context appContext;
 
@@ -124,6 +130,25 @@ public class API_Connection {
                     }
                 });
         queue.add(dr);
+    }
+
+    public void loginRequest(String userTokenID, final VolleyLoginCallBack callBack){
+        String postLoginUrl = loginUrl + userTokenID + "/";
+        RequestQueue queue = Volley.newRequestQueue(this.appContext);
+        StringRequest loginRequest = new StringRequest(Request.Method.POST, postLoginUrl, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                System.out.println("Login Response: " + response);
+                callBack.onSuccess(response);
+            }
+        },
+        new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                System.out.println("Login ERROR: " + error.toString());
+                callBack.onSuccess(error.toString());}
+        });
+        queue.add(loginRequest);
     }
 
     public String getRequestResponse(){

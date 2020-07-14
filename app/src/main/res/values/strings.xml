@@ -4,4 +4,7 @@
     <string name="new_activity">New Activity</string>
     <string name="input_hint">Activity name...</string>
     <string name="timepickerButton">Pick a starting time</string>
+
+
+    <string name="server_client_id">767187782063-nfinv144foohukhtv6sot8v9g1ptnkk5.apps.googleusercontent.com</string>
 </resources>

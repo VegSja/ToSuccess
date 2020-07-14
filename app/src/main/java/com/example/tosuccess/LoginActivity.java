@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
 
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             //Start app
             System.out.println("[LOGGER]: " + "Already logged in");
-            startMainActivity();
+            startMainActivity(account.getIdToken());
         }
         else if(account == null){
             //Start login
@@ -76,8 +77,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void startMainActivity(){
+    public void startMainActivity(String idtoken){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("IDToken", idtoken);
         startActivity(intent);
     }
 
@@ -110,7 +112,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         try{
             //Signed in successfully
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            startMainActivity();
+            String idToken = account.getIdToken();
+
+            startMainActivity(idToken);
         }catch (ApiException e){
             //Failed login
             System.out.println("[USER ERROR] : signInResult:failedCode:" + e.getStatusCode());

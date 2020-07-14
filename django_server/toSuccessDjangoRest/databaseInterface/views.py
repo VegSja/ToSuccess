@@ -23,6 +23,8 @@ def activity_list(request):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
+
+#This method is mainly used for deleting activities
 @csrf_exempt   
 def activity_detail(request, name):
     print("Activity detail called METHOD: " + request.method)
@@ -39,8 +41,12 @@ def activity_detail(request, name):
         activity.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+@csrf_exempt
+def sign_in(request, idToken):
 
 
+    if request.method == 'POST':
+        print("Recieved ID token: " + idToken)
 
 # class ActivityViewSet(viewsets.ModelViewSet):
 #     #API endpoint that allows users to be viewed or edited
