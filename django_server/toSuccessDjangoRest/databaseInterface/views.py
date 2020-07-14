@@ -20,13 +20,19 @@ import requests
 class activity_list_view(APIView):
     permission_classes = (IsAuthenticated,)
 
+
     def get(self, request):
-        activities = Activity.objects.all()
+        activities = Activity.objects.filter(user=request.user.username)
         serializer = ActivitySerializer(activities, many=True)
         return JsonResponse(serializer.data, safe=False)
     
     def post(self, request):
+        username = request.user.username
+        print("USER : " + username + " Sent a post request")
         data = JSONParser().parse(request)
+        ##NOTE: THIS IS JUST FOR THE SAKE OF TRYING SOMETHING. SHOULD BE CHANGED
+        data['user'] = username
+        print(data)
         serializer = ActivitySerializer(data=data)
         if serializer.is_valid():
             serializer.save()

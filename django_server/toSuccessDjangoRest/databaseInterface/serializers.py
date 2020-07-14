@@ -4,4 +4,4 @@ from rest_framework import serializers
 class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = ['id', 'activity_name', 'minutes_after_midnight', 'date']
+        fields = ['id', 'activity_name', 'minutes_after_midnight', 'date', 'user']
