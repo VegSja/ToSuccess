@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import android.widget.ToggleButton;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 //Standard JDK imports
@@ -60,6 +62,22 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.page_1:
+                        logger.loggerMessage("Page 1");
+                        break;
+                    case R.id.page_2:
+                        logger.loggerMessage("Page 2");
+                        break;
+                }
+                return true;
+            }
+        });
+
         Intent intent = getIntent();
         userTokenID = intent.getStringExtra("IDToken");
 
@@ -78,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         //Set date to header
         displayDateTime();
-
         loginToBackend();
     }
 
@@ -202,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
         String activityName = textView.getText().toString();
 
-        connection.deleteRequest(activityName, new API_Connection.VolleyDeleteCallBack() {
+        connection.deleteRequest(connection.backendAccessToken,activityName, new API_Connection.VolleyDeleteCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully deleted activity");

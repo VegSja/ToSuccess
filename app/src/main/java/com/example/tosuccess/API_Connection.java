@@ -133,7 +133,7 @@ public class API_Connection {
         queue.add(postRequest);
     }
     
-    public void deleteRequest(String name, final VolleyDeleteCallBack callBack){
+    public void deleteRequest(final String accessToken, String name, final VolleyDeleteCallBack callBack){
         String deleteUrl = url.concat(name + '/');
         RequestQueue queue = Volley.newRequestQueue(this.appContext);
         StringRequest dr = new StringRequest(Request.Method.DELETE, deleteUrl,
@@ -150,7 +150,14 @@ public class API_Connection {
                         logger.errorMessage("Delete error " + error.toString());
                         callBack.onSuccess(error.toString());
                     }
-                });
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError{
+                        Map<String,String> params = new HashMap<String, String>();
+                        params.put("Authorization", " Bearer " + accessToken);
+                        return params;
+                    }
+        };
         queue.add(dr);
     }
 

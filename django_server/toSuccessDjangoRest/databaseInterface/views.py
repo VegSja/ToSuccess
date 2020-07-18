@@ -45,14 +45,6 @@ class GoogleView(APIView):
         payload = request.data.get("token") # Make readable
         token = token_validation(payload)
 
-        #payload = {'accces_token': request.data.get("token")} # validate the token
-        # r = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
-        # data = json.loads(r.text)
-
-        # if 'error' in data:
-        #     content = {'message': 'wrong google token / this google token is already expired.'}
-        #     return Response(content)
-
         # Create a user if no exist
         try:
             print("Checking if user exists....")
@@ -75,25 +67,24 @@ class GoogleView(APIView):
         response['refreash_token'] = str(token)
         return Response(response)
 
-#This method is mainly used for deleting activities
-@csrf_exempt   
-def activity_detail(request, name):
-    print("Activity detail called METHOD: " + request.method)
-    try:
-        activity = Activity.objects.get(activity_name=name)
-    except Activity.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+class activity_detail(APIView):
+    permission_classes = (IsAuthenticated,)
 
-    if request.method == 'GET':
-        serializer = ActivitySerializer(activity)
-        return JsonResponse(serializer.data)
-    
-    if request.method == 'DELETE':
-        activity.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+    #This method is mainly used for deleting activities
+    def delete(self, request, name):
+        print("Activity detail called METHOD: " + request.method)
+        print("USER : " + request.user.username + " Sent a delete request")
 
-@csrf_exempt
-def sign_in(request, idToken):
+        print("Trying to delete: " + request.user.username)
+        try:
+            activity = Activity.objects.get(activity_name=name, user=request.user.username)
+        except Activity.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'POST':
-        token_validation(idToken)
+        if request.method == 'GET':
+            serializer = ActivitySerializer(activity)
+            return JsonResponse(serializer.data)
+
+        if request.method == 'DELETE':
+            activity.delete()
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
