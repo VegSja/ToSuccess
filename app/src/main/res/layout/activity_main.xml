@@ -45,22 +45,29 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="85dp"
         android:layout_gravity="end|bottom"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginHorizontal="16dp"
+        android:onClick="addActivtyButton"
         android:src="@drawable/ic_baseline_add_24"
-        android:layout_margin="16dp"
-        android:layout_alignParentRight="true"
-        android:onClick="addActivtyButton"/>
+        android:backgroundTint="@color/colorAccent" />
 
-<!--    <Button-->
-<!--        android:id="@+id/button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:background="#DE350B"-->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="70dp"
+        android:layout_marginHorizontal="16dp"
+        android:onClick="startLogin"
+        android:text="Sign Out" />
 
-<!--        android:text="@string/button_add" />-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </FrameLayout>

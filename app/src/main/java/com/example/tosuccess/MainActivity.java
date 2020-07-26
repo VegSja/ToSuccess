@@ -1,6 +1,7 @@
 package com.example.tosuccess;
 
 //AndroidX imports
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,17 +20,24 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 //Standard JDK imports
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 
 import static java.lang.String.valueOf;
 
-public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener {
+public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener, Serializable {
 
     FrameLayout mainLayout;
 
@@ -38,12 +48,40 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     RecyclerView rvActivities;
     ActivitiesAdapter adapter;
 
+    API_Connection connection;
+
     int timePickerMinutesAfterMidnight;
+
+    String userTokenID;
+
+    Logger logger = new Logger();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.page_1:
+                        logger.loggerMessage("Page 1");
+                        break;
+                    case R.id.page_2:
+                        logger.loggerMessage("Page 2");
+                        break;
+                }
+                return true;
+            }
+        });
+
+        Intent intent = getIntent();
+        userTokenID = intent.getStringExtra("IDToken");
+
+        logger.loggerMessage("IDTOKEN: " + userTokenID);
 
         //Create the list. To avoid errors in the future
         activities = new ArrayList<Plan>();
@@ -58,8 +96,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         //Set date to header
         displayDateTime();
-
-        populateActivitiesFromServer();
+        loginToBackend();
     }
 
 
@@ -68,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd. MMMM yyyy");
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
+    }
+
+    public Integer getCurrentDayOfYear(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     public void displayDateTime(){
@@ -104,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     //Is called when create activty button is pressed
     public void createActivityButton(View view){
         EditText textInput = (EditText) popUpClass.getPopupView().findViewById(R.id.textInput);
-        createActivity(textInput.getText().toString(), timePickerMinutesAfterMidnight);
+        String activity_name =  textInput.getText().toString();
+        sendActivityToServer(activity_name, timePickerMinutesAfterMidnight, getCurrentDayOfYear()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
+        createActivity(activity_name, timePickerMinutesAfterMidnight);
     }
 
     //Timepicker actions ----------------------------
@@ -170,6 +214,25 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         rvActivities.scheduleLayoutAnimation();
     }
 
+    public void deleteActivity(View view){
+        ViewGroup activityCard = (ViewGroup) view.getParent();
+        TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
+        String activityName = textView.getText().toString();
+
+        connection.deleteRequest(connection.backendAccessToken,activityName, new API_Connection.VolleyDeleteCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully deleted activity");
+                populateActivitiesFromServer();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("Could not delete activity");
+            }
+        });
+    }
+
     public void createPopUpMessage(String message){
         //Display pop-up message
         Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.main), message, Snackbar.LENGTH_SHORT);
@@ -177,14 +240,15 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     }
 
     public void populateActivitiesFromServer(){
-        final API_Connection connection = new API_Connection(this);
+
+        activities = new ArrayList<Plan>(); //Clear the activities before updating the entire list
 
         //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
-        connection.getRequest(new API_Connection.VolleyCallBack() {
+        connection.getRequest(connection.backendAccessToken, new API_Connection.VolleyGetCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully connected to server");
-                JsonReader jReader = new JsonReader(response);
+                JsonReader jReader = new JsonReader(response, getCurrentDayOfYear());
                 for(int i=0; i<jReader.getActivityName().size(); i++) {
                     createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnight().get(i));
                 }
@@ -193,6 +257,20 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
             @Override
             public void onError(String errorMessage) {
                 createPopUpMessage(errorMessage);
+            }
+        });
+    }
+
+    public void sendActivityToServer(String activity_name, int minutesAfterMidnight, int dayNumber){
+        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnight, dayNumber,new API_Connection.VolleyPushCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully pushed to server");
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("Failed to push to server");
             }
         });
     }
@@ -219,5 +297,27 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         String timeStr = hoursString + ":" + minuteString;
         return timeStr;
+    }
+
+    public void loginToBackend(){
+        connection = new API_Connection(this);
+        connection.loginRequest(userTokenID, new API_Connection.VolleyLoginCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully connected to backend as user");
+                populateActivitiesFromServer();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("ERROR: " + errorMessage);
+            }
+        });
+    }
+
+
+    public void startLogin(View v){
+        Intent loginActivityIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginActivityIntent);
     }
 }

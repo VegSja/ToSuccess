@@ -14,17 +14,16 @@ import java.util.ListIterator;
 public class JsonReader {
 
     String JsonString;
+    Integer dayOfYear;
 
     ArrayList<String> activity_name;
     ArrayList<Integer> seconds_after_midnight;
 
-    public JsonReader(String json){
+    public JsonReader(String json, Integer filterDate){
         JsonString = json;
-        System.out.println("JSON STRING: " + JsonString);
+        dayOfYear = filterDate;
         if(JsonString != null) {
             readJson();
-        }else{
-            System.out.println("Json string error!");
         }
     }
 
@@ -32,15 +31,15 @@ public class JsonReader {
         activity_name = new ArrayList<String>();
         seconds_after_midnight = new ArrayList<Integer>();
         try {
-            JSONObject obj = new JSONObject(JsonString);
-            JSONArray arr = obj.getJSONArray("results");
+            JSONArray arr = new JSONArray(JsonString);
             for (int i = 0; i < arr.length(); i++) {
-                System.out.println("Json object: " + arr.getJSONObject(i).getString("activity_name"));
-                activity_name.add(arr.getJSONObject(i).getString("activity_name"));
-                seconds_after_midnight.add(arr.getJSONObject(i).getInt("seconds_after_midnight"));
+
+                if(arr.getJSONObject(i).getInt("date") == dayOfYear) { //Currently we pull everything from the server and sort it on the device. This is not good!
+                    activity_name.add(arr.getJSONObject(i).getString("activity_name"));
+                    seconds_after_midnight.add(arr.getJSONObject(i).getInt("minutes_after_midnight"));
+                }
             }
         } catch (JSONException j){
-            System.out.println("KEEPS FAILING");
             j.printStackTrace();
         }
     }
