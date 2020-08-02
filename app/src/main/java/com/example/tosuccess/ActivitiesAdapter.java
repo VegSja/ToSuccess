@@ -1,19 +1,14 @@
 package com.example.tosuccess;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -26,7 +21,8 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         // for any view that will be set as you render a row
 
         public TextView activityNameTextView;
-        public TextView activityTimeTextView;
+        public TextView activityTimeTextViewStart;
+        public TextView activityTimeTextViewEnd;
         public ToggleButton toggleButtonFinished;
 
         public ViewHolder(View itemView){
@@ -35,7 +31,8 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
             super(itemView);
 
             activityNameTextView = (TextView) itemView.findViewById(R.id.activity_name);
-            activityTimeTextView = (TextView) itemView.findViewById(R.id.activity_time);
+            activityTimeTextViewStart = (TextView) itemView.findViewById(R.id.activity_time_start);
+            activityTimeTextViewEnd = (TextView) itemView.findViewById(R.id.activity_time_end);
             toggleButtonFinished = (ToggleButton) itemView.findViewById(R.id.toggleButton);
 
         }
@@ -72,8 +69,11 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         TextView textView = viewHolder.activityNameTextView;
         textView.setText(activity.getName());
 
-        TextView timeView = viewHolder.activityTimeTextView;
-        timeView.setText(activity.getTime());
+        TextView timeViewStart = viewHolder.activityTimeTextViewStart;
+        timeViewStart.setText(activity.getStrTimeStart());
+
+        TextView timeViewEnd = viewHolder.activityTimeTextViewEnd;
+        timeViewEnd.setText(activity.getStrTimeEnd());
 
         //Set boolean value based on what was fed into plan
         ToggleButton toggleButton = viewHolder.toggleButtonFinished;

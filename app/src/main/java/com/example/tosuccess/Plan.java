@@ -1,35 +1,28 @@
 package com.example.tosuccess;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.ToggleButton;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import static java.lang.String.valueOf;
 
 public class Plan implements Comparable<Plan>{
     String activityName;
-    int minutesAfterMidnight;
+    int minutesAfterMidnightStart;
+    int minutesAfterMidnightEnd;
     String startingTime;
+    String endTime;
     Boolean completed;
 
     @Override
     public int compareTo(Plan p){
-        return this.minutesAfterMidnight - p.getMinutes();
+        return this.minutesAfterMidnightStart - p.getMinutes();
     }
 
-    public Plan(String ActivityName, int minutesAfterMidnight, String startingTime,  Boolean activityCompleted){
+    public Plan(String ActivityName, int minutesAfterMidnightStart, int minutesAfterMidnightEnd, String startingTime, String endTime,  Boolean activityCompleted){
         activityName = ActivityName;
-        this.minutesAfterMidnight = minutesAfterMidnight;
+        this.minutesAfterMidnightStart = minutesAfterMidnightStart;
+        this.minutesAfterMidnightEnd = minutesAfterMidnightEnd;
         this.startingTime = startingTime;
+        this.endTime = endTime;
         completed = activityCompleted;
+
 
     }
     public String getName(){
@@ -38,6 +31,7 @@ public class Plan implements Comparable<Plan>{
     public Boolean getCompleted(){
         return  completed;
     }
-    public String getTime(){return startingTime;}
-    public int getMinutes(){return minutesAfterMidnight;}
+    public String getStrTimeStart(){return startingTime;}
+    public String getStrTimeEnd(){return endTime;}
+    public int getMinutes(){return minutesAfterMidnightStart;}
 }

@@ -96,14 +96,15 @@ public class API_Connection {
         logger.statusMessage("Sending request to GET from server: " + jsonRequest.toString());
     }
 
-    public void postRequest(final String accessToken, String name, Integer minutes_after_midnight, Integer dayNumber, final VolleyPushCallBack callBack){
+    public void postRequest(final String accessToken, String name, Integer minutes_after_midnight_start, Integer minutes_after_midnight_end, Integer dayNumber, final VolleyPushCallBack callBack){
         JSONObject jsonobj;
         jsonobj = new JSONObject();
         try{
             //Adding some keys
             jsonobj.put("id", 1);
             jsonobj.put("activity_name", name);
-            jsonobj.put("minutes_after_midnight", minutes_after_midnight);
+            jsonobj.put("minutes_after_midnight_start", minutes_after_midnight_start);
+            jsonobj.put("minutes_after_midnight_end", minutes_after_midnight_end);
             jsonobj.put("date", dayNumber);
         }catch (JSONException e){
             e.printStackTrace();

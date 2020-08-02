@@ -17,7 +17,8 @@ public class JsonReader {
     Integer dayOfYear;
 
     ArrayList<String> activity_name;
-    ArrayList<Integer> seconds_after_midnight;
+    ArrayList<Integer> seconds_after_midnight_start;
+    ArrayList<Integer> seconds_after_midnight_end;
 
     public JsonReader(String json, Integer filterDate){
         JsonString = json;
@@ -29,14 +30,16 @@ public class JsonReader {
 
     private void readJson() {
         activity_name = new ArrayList<String>();
-        seconds_after_midnight = new ArrayList<Integer>();
+        seconds_after_midnight_start = new ArrayList<Integer>();
+        seconds_after_midnight_end = new ArrayList<Integer>();
         try {
             JSONArray arr = new JSONArray(JsonString);
             for (int i = 0; i < arr.length(); i++) {
 
                 if(arr.getJSONObject(i).getInt("date") == dayOfYear) { //Currently we pull everything from the server and sort it on the device. This is not good!
                     activity_name.add(arr.getJSONObject(i).getString("activity_name"));
-                    seconds_after_midnight.add(arr.getJSONObject(i).getInt("minutes_after_midnight"));
+                    seconds_after_midnight_start.add(arr.getJSONObject(i).getInt("minutes_after_midnight_start"));
+                    seconds_after_midnight_end.add(arr.getJSONObject(i).getInt("minutes_after_midnight_end"));
                 }
             }
         } catch (JSONException j){
@@ -45,5 +48,6 @@ public class JsonReader {
     }
 
     public List<String> getActivityName(){return activity_name;}
-    public List<Integer> getSecondsAfterMidnight(){return seconds_after_midnight;}
+    public List<Integer> getSecondsAfterMidnightStart(){return seconds_after_midnight_start;}
+    public List<Integer> getSecondsAfterMidnightEnd(){return seconds_after_midnight_end;}
 }

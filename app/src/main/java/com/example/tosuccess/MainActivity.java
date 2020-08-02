@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -37,7 +38,7 @@ import java.util.Collections;
 
 import static java.lang.String.valueOf;
 
-public class MainActivity extends AppCompatActivity implements TimerPickerFragment.OnTimeSelectedListener, Serializable {
+public class MainActivity extends AppCompatActivity {
 
     FrameLayout mainLayout;
 
@@ -140,40 +141,29 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
     public void createPopUp(View view){
         popUpClass = new PopUpClass(mainLayout);
         popUpClass.showPopupWindow(view);
-        //Set the opacity of the main layout
     }
 
     //Is called when create activty button is pressed
     public void createActivityButton(View view){
+        //Get activity name
         EditText textInput = (EditText) popUpClass.getPopupView().findViewById(R.id.textInput);
         String activity_name =  textInput.getText().toString();
-        sendActivityToServer(activity_name, timePickerMinutesAfterMidnight, getCurrentDayOfYear()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
-        createActivity(activity_name, timePickerMinutesAfterMidnight);
+
+        //Get time
+        Spinner timeStart = (Spinner) popUpClass.getPopupView().findViewById(R.id.time_spinner_start);
+        String timeStartStr = timeStart.getSelectedItem().toString();
+        int minutesAfterMidnightStart = timeStrToMinutes(timeStartStr);
+
+        Spinner timeEnd = (Spinner) popUpClass.getPopupView().findViewById(R.id.time_spinner_end);
+        String timeEndStr = timeEnd.getSelectedItem().toString();
+        int minutesAfterMidnightEnd = timeStrToMinutes(timeEndStr);
+
+        //Send to server and create activity
+        sendActivityToServer(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, getCurrentDayOfYear()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
+        createActivity(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd);
     }
 
-    //Timepicker actions ----------------------------
-    public void showTimePickerDialog(View v){
-        DialogFragment newFragment = new TimerPickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
 
-    @Override
-    public void onAttachFragment(Fragment fragment){
-        if(fragment instanceof TimerPickerFragment){
-            TimerPickerFragment timerPickerFragment = (TimerPickerFragment) fragment;
-            timerPickerFragment.setOnTimeSetListener(this);
-        }
-    }
-
-    public void onTimeSelected(int minutesAfterMidnight){
-
-        //Change the button text
-        Button timeButton = (Button) popUpClass.getPopupView().findViewById(R.id.TimeButton);
-        timeButton.setText(minutesToTimeStr(minutesAfterMidnight));
-
-        //Sets up the variable that the created activity depends on
-        timePickerMinutesAfterMidnight = minutesAfterMidnight;
-    }
 
     //Is called when toggle on card is pressed
     public void onToggleClicked(View view){
@@ -191,10 +181,11 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
             }
         }
     }
-
-    public void createActivity(String activity_name, int minutesAfterMidnight){
+    //TODO: Make a system which also sends when an activity is finished. Drop down menu?
+    public void createActivity(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd){
         //Create activity
-        Plan plan = new Plan(activity_name, minutesAfterMidnight, minutesToTimeStr(minutesAfterMidnight),false);
+        Plan plan = new Plan(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, minutesToTimeStr(minutesAfterMidnightStart), minutesToTimeStr(minutesAfterMidnightEnd),false);
+        logger.loggerMessage("Creating activity: " + "Minutes" + String.valueOf(minutesAfterMidnightStart) + "Minutes string: " + minutesToTimeStr(minutesAfterMidnightStart));
 
         if(activities.size() > 0) {
             //Add activity to adapterlist
@@ -250,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
                 createPopUpMessage("Successfully connected to server");
                 JsonReader jReader = new JsonReader(response, getCurrentDayOfYear());
                 for(int i=0; i<jReader.getActivityName().size(); i++) {
-                    createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnight().get(i));
+                    createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnightStart().get(i), jReader.getSecondsAfterMidnightEnd().get(i));
                 }
             }
 
@@ -261,8 +252,8 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
         });
     }
 
-    public void sendActivityToServer(String activity_name, int minutesAfterMidnight, int dayNumber){
-        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnight, dayNumber,new API_Connection.VolleyPushCallBack() {
+    public void sendActivityToServer(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd, int dayNumber){
+        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, dayNumber,new API_Connection.VolleyPushCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully pushed to server");
@@ -297,6 +288,12 @@ public class MainActivity extends AppCompatActivity implements TimerPickerFragme
 
         String timeStr = hoursString + ":" + minuteString;
         return timeStr;
+    }
+
+    public int timeStrToMinutes(String timeStr){
+        int hour = Integer.parseInt(timeStr.substring(0,2));
+        int minutes = Integer.parseInt(timeStr.substring(3,5));
+        return hour*60+minutes;
     }
 
     public void loginToBackend(){
