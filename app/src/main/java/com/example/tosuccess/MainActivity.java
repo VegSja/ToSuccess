@@ -64,20 +64,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item){
-                switch (item.getItemId()){
-                    case R.id.page_1:
-                        logger.loggerMessage("Page 1");
-                        break;
-                    case R.id.page_2:
-                        logger.loggerMessage("Page 2");
-                        break;
-                }
-                return true;
-            }
-        });
+        BottomNavigation navigation = new BottomNavigation(this, bottomNavigationView);
 
         Intent intent = getIntent();
         userTokenID = intent.getStringExtra("IDToken");
@@ -220,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(String errorMessage) {
                 createPopUpMessage("Could not delete activity");
+                populateActivitiesFromServer();
             }
         });
     }

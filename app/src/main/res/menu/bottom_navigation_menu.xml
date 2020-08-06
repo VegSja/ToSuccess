@@ -3,15 +3,27 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
     <item
-        android:id="@+id/page_1"
+        android:id="@+id/daily_schedule"
         android:enabled="true"
         android:icon="@drawable/ic_toggle"
         android:iconTint="@color/primaryColor"
-        android:title="Number 1"/>
+        android:title="Schedule"/>
     <item
-        android:id="@+id/page_2"
+        android:id="@+id/subjects"
         android:enabled="true"
         android:icon="@drawable/ic_toggle"
         android:iconTint="@color/primaryColor"
-        android:title="Number 2"/>
+        android:title="Subjects"/>
+    <item
+        android:id="@+id/stats"
+        android:enabled="true"
+        android:icon="@drawable/ic_toggle"
+        android:iconTint="@color/primaryColor"
+        android:title="Stats"/>
+    <item
+        android:id="@+id/settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_toggle"
+        android:iconTint="@color/primaryColor"
+        android:title="Settings"/>
 </menu>
