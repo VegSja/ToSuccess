@@ -50,8 +50,8 @@ public class API_Connection {
 
 
 
-    String url = "http://62.16.199.208:3690/activities/";
-    String loginUrl = "http://62.16.199.208:3690/google/";
+    String url = "http://vegsja.pythonanywhere.com/activities/";
+    String loginUrl = "http://vegsja.pythonanywhere.com/google/";
 
     Context appContext;
 
@@ -96,7 +96,7 @@ public class API_Connection {
         logger.statusMessage("Sending request to GET from server: " + jsonRequest.toString());
     }
 
-    public void postRequest(final String accessToken, String name, Integer minutes_after_midnight_start, Integer minutes_after_midnight_end, Integer dayNumber, final VolleyPushCallBack callBack){
+    public void postRequest(final String accessToken, String name, Integer minutes_after_midnight_start, Integer minutes_after_midnight_end, Integer dayNumber, String date_string, final VolleyPushCallBack callBack){
         JSONObject jsonobj;
         jsonobj = new JSONObject();
         try{
@@ -106,6 +106,7 @@ public class API_Connection {
             jsonobj.put("minutes_after_midnight_start", minutes_after_midnight_start);
             jsonobj.put("minutes_after_midnight_end", minutes_after_midnight_end);
             jsonobj.put("date", dayNumber);
+            jsonobj.put("date_string", date_string);
         }catch (JSONException e){
             e.printStackTrace();
         }

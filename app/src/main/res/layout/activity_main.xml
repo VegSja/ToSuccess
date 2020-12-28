@@ -12,12 +12,13 @@
     <TextView
         android:id="@+id/headerDateText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_margin="20dp"
-        android:text="14. June 2020"
-        android:textColor="@color/PrimaryTextColor"
+        android:autoSizeTextType="uniform"
         android:textSize="40dp"
-        android:typeface="monospace"/>
+        android:text="14. November 2020"
+        android:textColor="@color/PrimaryTextColor"
+        android:typeface="monospace" />
 
 
     <TextView

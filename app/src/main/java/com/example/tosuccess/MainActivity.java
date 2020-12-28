@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         int minutesAfterMidnightEnd = timeStrToMinutes(timeEndStr);
 
         //Send to server and create activity
-        sendActivityToServer(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, getCurrentDayOfYear()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
+        sendActivityToServer(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, getCurrentDayOfYear(), getCurrentLocalDate()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
         createActivity(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd);
     }
 
@@ -240,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void sendActivityToServer(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd, int dayNumber){
-        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, dayNumber,new API_Connection.VolleyPushCallBack() {
+    public void sendActivityToServer(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd, int dayNumber, String date_string){
+        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, dayNumber, date_string,new API_Connection.VolleyPushCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully pushed to server");

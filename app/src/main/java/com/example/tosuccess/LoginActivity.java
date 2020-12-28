@@ -16,15 +16,18 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, Serializable {
 
     GoogleSignInClient mGoogleSignInClient;
+
     int RC_SIGN_IN = 0;
 
     Logger logger = new Logger();
+    API_Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -39,8 +42,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .requestEmail()
                 .build();
 
+
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
         //Set dimensions of the sign-in button
         SignInButton signInButton = findViewById(R.id.google_sign_in_button);
@@ -104,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //Result returned form launching the Intent from signIn();
         if (requestCode == RC_SIGN_IN){
-            //The tash returned from this call is always completed, no need to attach a listener
+            //The task returned from this call is always completed, no need to attach a listener
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
@@ -115,11 +120,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //Signed in successfully
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String idToken = account.getIdToken();
+            loginToBackend(idToken);
 
-            startMainActivity(idToken);
         }catch (ApiException e){
             //Failed login
             logger.errorMessage("signInResult:failedCode:" + e.getStatusCode());
         }
+    }
+
+    public void loginToBackend(final String idToken){
+        connection = new API_Connection(this);
+        connection.loginRequest(idToken, new API_Connection.VolleyLoginCallBack() {
+            @Override
+            public void onSuccess(String response) {
+                createPopUpMessage("Successfully connected to backend as user");
+                logger.loggerMessage("Acccess Token retrieved from backend: " + connection.backendAccessToken);
+                //Start main activity
+                startMainActivity(idToken);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                createPopUpMessage("ERROR: " + errorMessage);
+            }
+        });
+    }
+    public void createPopUpMessage(String message){
+        //Display pop-up message
+        Snackbar popUpMessage = Snackbar.make(this.findViewById(R.id.login), message, Snackbar.LENGTH_SHORT);
+        popUpMessage.show();
     }
 }
