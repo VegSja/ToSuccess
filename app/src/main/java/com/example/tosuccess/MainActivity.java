@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     API_Connection connection;
 
-    int timePickerMinutesAfterMidnight;
-
     String userTokenID;
 
     Logger logger = new Logger();
@@ -147,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Send to server and create activity
         sendActivityToServer(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, getCurrentDayOfYear(), getCurrentLocalDate()); //We need to call this one here becuase if we call it in the createActivity it will be called each time we update from server
-        createActivity(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd);
     }
 
 
@@ -169,9 +166,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     //TODO: Make a system which also sends when an activity is finished. Drop down menu?
-    public void createActivity(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd){
+    public void createActivity(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd, int activity_id){
         //Create activity
-        Plan plan = new Plan(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, minutesToTimeStr(minutesAfterMidnightStart), minutesToTimeStr(minutesAfterMidnightEnd),false);
+        Plan plan = new Plan(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, minutesToTimeStr(minutesAfterMidnightStart), minutesToTimeStr(minutesAfterMidnightEnd),false, activity_id);
         logger.loggerMessage("Creating activity: " + "Minutes" + String.valueOf(minutesAfterMidnightStart) + "Minutes string: " + minutesToTimeStr(minutesAfterMidnightStart));
 
         if(activities.size() > 0) {
@@ -195,9 +192,10 @@ public class MainActivity extends AppCompatActivity {
     public void deleteActivity(View view){
         ViewGroup activityCard = (ViewGroup) view.getParent();
         TextView textView = (TextView) activityCard.findViewById(R.id.activity_name);
-        String activityName = textView.getText().toString();
+        int activityId = Integer.parseInt(textView.getTag().toString());
 
-        connection.deleteRequest(connection.backendAccessToken,activityName, new API_Connection.VolleyDeleteCallBack() {
+
+        connection.deleteRequest(connection.backendAccessToken,activityId, new API_Connection.VolleyDeleteCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully deleted activity");
@@ -223,13 +221,13 @@ public class MainActivity extends AppCompatActivity {
         activities = new ArrayList<Plan>(); //Clear the activities before updating the entire list
 
         //The callback thingy makes the program wait until onSuccess is called in OnResponse in API_Connection
-        connection.getRequest(connection.backendAccessToken, new API_Connection.VolleyGetCallBack() {
+        connection.getRequest(this.getCurrentDayOfYear(), connection.backendAccessToken, new API_Connection.VolleyGetCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully connected to server");
                 JsonReader jReader = new JsonReader(response, getCurrentDayOfYear());
                 for(int i=0; i<jReader.getActivityName().size(); i++) {
-                    createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnightStart().get(i), jReader.getSecondsAfterMidnightEnd().get(i));
+                    createActivity(jReader.getActivityName().get(i), jReader.getSecondsAfterMidnightStart().get(i), jReader.getSecondsAfterMidnightEnd().get(i), jReader.getActivityId().get(i));
                 }
             }
 
@@ -241,10 +239,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendActivityToServer(String activity_name, int minutesAfterMidnightStart, int minutesAfterMidnightEnd, int dayNumber, String date_string){
-        connection.postRequest(connection.backendAccessToken ,activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, dayNumber, date_string,new API_Connection.VolleyPushCallBack() {
+        connection.postRequest(activity_name, minutesAfterMidnightStart, minutesAfterMidnightEnd, dayNumber, date_string,new API_Connection.VolleyPushCallBack() {
             @Override
             public void onSuccess(String response) {
                 createPopUpMessage("Successfully pushed to server");
+                populateActivitiesFromServer();
             }
 
             @Override

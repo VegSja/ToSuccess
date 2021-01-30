@@ -19,6 +19,7 @@ public class JsonReader {
     ArrayList<String> activity_name;
     ArrayList<Integer> seconds_after_midnight_start;
     ArrayList<Integer> seconds_after_midnight_end;
+    ArrayList<Integer> activity_id;
 
     public JsonReader(String json, Integer filterDate){
         JsonString = json;
@@ -32,6 +33,7 @@ public class JsonReader {
         activity_name = new ArrayList<String>();
         seconds_after_midnight_start = new ArrayList<Integer>();
         seconds_after_midnight_end = new ArrayList<Integer>();
+        activity_id = new ArrayList<Integer>();
         try {
             JSONArray arr = new JSONArray(JsonString);
             for (int i = 0; i < arr.length(); i++) {
@@ -40,6 +42,7 @@ public class JsonReader {
                     activity_name.add(arr.getJSONObject(i).getString("activity_name"));
                     seconds_after_midnight_start.add(arr.getJSONObject(i).getInt("minutes_after_midnight_start"));
                     seconds_after_midnight_end.add(arr.getJSONObject(i).getInt("minutes_after_midnight_end"));
+                    activity_id.add(arr.getJSONObject(i).getInt("unique_id"));
                 }
             }
         } catch (JSONException j){
@@ -50,4 +53,5 @@ public class JsonReader {
     public List<String> getActivityName(){return activity_name;}
     public List<Integer> getSecondsAfterMidnightStart(){return seconds_after_midnight_start;}
     public List<Integer> getSecondsAfterMidnightEnd(){return seconds_after_midnight_end;}
+    public List<Integer> getActivityId(){return activity_id;}
 }

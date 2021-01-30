@@ -68,6 +68,8 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Vi
         //Set item views based on your views and data model
         TextView textView = viewHolder.activityNameTextView;
         textView.setText(activity.getName());
+        textView.setTag(activity.activityId);
+        System.out.println("Setting tag: " + activity.activityId);
 
         TextView timeViewStart = viewHolder.activityTimeTextViewStart;
         timeViewStart.setText(activity.getStrTimeStart());
