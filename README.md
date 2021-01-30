@@ -28,4 +28,4 @@ Authorization with the backend is completed wtih oAuth Google sign in and the ba
 # Images
 As this is a work in progress the only image availible per this date is of the main activity page. Displaying activities planned for the current date
 
-[ActivityPage](/Pictures/mainpage.png)
+[ActivityPage](/Pictures/mainpage.jpg)
